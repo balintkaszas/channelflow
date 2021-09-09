@@ -72,6 +72,10 @@ Real wallshearUpper(const FlowField& f, bool normalize = true);  // 1/(2LxLz)  i
 
 Real L2Norm2_3d(const FlowField& f, bool normalize = true);  // L2Norm2 of all kx!=0 modes
 Real L2Norm3d(const FlowField& f, bool normalize = true);    // L2Norm  of all kx!=0 modes
+Real distFromHeteroclinic(const FlowField& f);
+
+Real distFromHeteroclinicHeuristic(const FlowField& f, Real t);
+
 
 cfarray<Real> truncerr(const FlowField& f);
 

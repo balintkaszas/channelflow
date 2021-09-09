@@ -10,6 +10,10 @@
 
 #include "cfbasics/mathdefs.h"
 #include "utilfuncs.h"
+#include <algorithm>
+#include <vector>
+#include <iterator>
+
 
 using namespace std;
 
@@ -3965,6 +3969,51 @@ string fieldstats_t(const FlowField& u, Real t) {
     s << fieldstats(u);
     return s.str();
 }
+
+
+
+
+
+Real distFromHeteroclinic(const FlowField& u) {
+
+    string sourceHeteroclincLBUB = "LBUB/data/u";
+    string sourceHeteroclincLBUC = "LBUC/data/u";
+
+    std::vector<Real> distancesLBUB, distancesLBUC;
+    int sizeOfHeteroclinicOrbit = 4000;
+    distancesLBUB.reserve(sizeOfHeteroclinicOrbit);
+    distancesLBUC.reserve(sizeOfHeteroclinicOrbit);
+
+    for(int i = 0; i<sizeOfHeteroclinicOrbit; ++i){
+        FlowField tempLBUB(sourceHeteroclincLBUB + std::to_string(i));
+        FlowField tempLBUC(sourceHeteroclincLBUC + std::to_string(i));
+        distancesLBUB.push_back(L2Dist(u, tempLBUB));
+        distancesLBUC.push_back(L2Dist(u, tempLBUC));
+    }
+    Real minLBUB = *std::min_element( std::begin(distancesLBUB), std::end(distancesLBUB) );
+    Real minLBUC = *std::min_element( std::begin(distancesLBUC), std::end(distancesLBUC) );
+    return std::min(minLBUB, minLBUC);
+}
+
+
+
+
+Real distFromHeteroclinicHeuristic(const FlowField& u, Real t) {
+
+    string sourceHeteroclincLBUB = "LBUB/data/u" + std::to_string(int(t));
+    string sourceHeteroclincLBUC = "LBUC/data/u" + std::to_string(int(t));
+    FlowField tempLBUB(sourceHeteroclincLBUB);
+    FlowField tempLBUC(sourceHeteroclincLBUC);
+    Real minLBUB = L2Dist(u, tempLBUB);
+    Real minLBUC = L2Dist(u, tempLBUC);
+    return std::min(minLBUB, minLBUC);
+}
+
+
+
+
+
+
 
 Real min_x_L2Dist(const FlowField& u0, const FlowField& u1, Real tol) {
     Real ax = optPhaseShiftx(u0, u1, -0.5, 0.5, tol);

@@ -54,7 +54,11 @@ int main(int argc, char* argv[]) {
         const bool pUbulk = args.getflag("-Up", "--Ubulk-print", "print Ubulk each dT");
         const bool pdPdx = args.getflag("-p", "--pressure", "print pressure gradient each dT");
         const Real umin = args.getreal("-u", "--umin", 0.0, "stop if chebyNorm(u) < umin");
+	    const bool withDistFromheteroclinic = args.getflag("-dhc", "--distrheteroclinic", "Print the distance from the heteroclinic orbit at each step");//
 
+	    const bool withDistFromheteroclinicHeuristic = args.getflag("-dhch", "--distrheteroclinich", "Print the distance from the heteroclinic orbit at each step");//
+	//heuristic is that dist(u(t), u_{h}) = min_s dist(u(t), u_h(s)) \approx dist(u(t), u_h(t));
+	
         const Real ecfmin = args.getreal("-e", "--ecfmin", 0.0, "stop if Ecf(u) < ecfmin");
         const int saveint = args.getint("-s", "--saveinterval", 1, "save fields every s dT");
 
@@ -127,8 +131,14 @@ int main(int argc, char* argv[]) {
             s = fieldstats_t(fields[0], t);
             // fields[0] -= dns.Ubase(); //////////////////// ONLY
             eout << s << endl;
-	    eout << setw(8) << L2IP(fields[0], eigenvector) << endl;
-            if (saveint != 0 && i % saveint == 0) {
+	    eout << setw(8) << L2IP(fields[0], eigenvector);
+	    if(withDistFromheteroclinic and withDistFromheteroclinicHeuristic == false)
+	    	eout << distFromHeteroclinic(fields[0]);
+	    
+	    if(withDistFromheteroclinic and withDistFromheteroclinicHeuristic)
+	    	eout << distFromHeteroclinicHeuristic(fields[0], t);
+	    eout << endl;
+	    if (saveint != 0 && i % saveint == 0) {
                 fields[0].save(outdir + label + t2s(t, inttime));
                 if (savep)
                     fields[1].save(outdir + "p" + t2s(t, inttime));
