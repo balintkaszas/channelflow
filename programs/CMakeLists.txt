@@ -7,6 +7,7 @@
 set(program_APPS
   simulateflow
   edgetracking
+  simulateflow_withProjection
   )
 
 if (WITH_NSOLVER)
