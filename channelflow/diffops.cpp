@@ -3976,15 +3976,15 @@ string fieldstats_t(const FlowField& u, Real t) {
 
 Real distFromHeteroclinic(const FlowField& u) {
 
-    string sourceHeteroclincLBUB = "LBUB/data/u";
-    string sourceHeteroclincLBUC = "LBUC/data/u";
+    string sourceHeteroclincLBUB = "../exactHeteroclinic/LBtoUB/u";
+    string sourceHeteroclincLBUC = "../exactHeteroclinic/LBtoLam/u";
 
     std::vector<Real> distancesLBUB, distancesLBUC;
-    int sizeOfHeteroclinicOrbit = 4000;
+    int sizeOfHeteroclinicOrbit = 3000;
     distancesLBUB.reserve(sizeOfHeteroclinicOrbit);
     distancesLBUC.reserve(sizeOfHeteroclinicOrbit);
 
-    for(int i = 0; i<sizeOfHeteroclinicOrbit; ++i){
+    for(int i = 1500; i<sizeOfHeteroclinicOrbit; i+=150){
         FlowField tempLBUB(sourceHeteroclincLBUB + std::to_string(i));
         FlowField tempLBUC(sourceHeteroclincLBUC + std::to_string(i));
         distancesLBUB.push_back(L2Dist(u, tempLBUB));
@@ -3998,15 +3998,10 @@ Real distFromHeteroclinic(const FlowField& u) {
 
 
 
-Real distFromHeteroclinicHeuristic(const FlowField& u, Real t) {
-
-    string sourceHeteroclincLBUB = "LBUB/data/u" + std::to_string(int(t));
-    string sourceHeteroclincLBUC = "LBUC/data/u" + std::to_string(int(t));
-    FlowField tempLBUB(sourceHeteroclincLBUB);
-    FlowField tempLBUC(sourceHeteroclincLBUC);
-    Real minLBUB = L2Dist(u, tempLBUB);
-    Real minLBUC = L2Dist(u, tempLBUC);
-    return std::min(minLBUB, minLBUC);
+Real distFromHeteroclinicHeuristic(const FlowField& u, const FlowField& v) {
+    
+    Real minLBUC = L2Dist(u, v);
+    return minLBUC;//, minLBUC);
 }
 
 

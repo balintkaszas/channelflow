@@ -117,6 +117,7 @@ int main(int argc, char* argv[]) {
 
         FlowField u0, du, tmp;
 	FlowField eigenvector("ef1.nc"); // Load the unstable eigenvector of the lower branch state. Already precomputed
+	FlowField initField("ubest.nc");
         int i = 0;
         for (Real t = flags.t0; t <= flags.T; t += dt.dT()) {
             string s;
@@ -130,13 +131,13 @@ int main(int argc, char* argv[]) {
             // fields[0] += dns.Ubase(); //////////////////// ONLY
             s = fieldstats_t(fields[0], t);
             // fields[0] -= dns.Ubase(); //////////////////// ONLY
-            eout << s << endl;
-	    eout << setw(8) << L2IP(fields[0], eigenvector);
+            eout << s ;
+	    eout << '\t' << L2IP(fields[0], eigenvector);
 	    if(withDistFromheteroclinic and withDistFromheteroclinicHeuristic == false)
-	    	eout << distFromHeteroclinic(fields[0]);
+	    	eout << '\t' << distFromHeteroclinic(fields[0]);
 	    
 	    if(withDistFromheteroclinic and withDistFromheteroclinicHeuristic)
-	    	eout << distFromHeteroclinicHeuristic(fields[0], t);
+	    	eout << '\t' << distFromHeteroclinicHeuristic(fields[0], initField);
 	    eout << endl;
 	    if (saveint != 0 && i % saveint == 0) {
                 fields[0].save(outdir + label + t2s(t, inttime));
