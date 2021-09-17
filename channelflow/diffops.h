@@ -72,7 +72,7 @@ Real wallshearUpper(const FlowField& f, bool normalize = true);  // 1/(2LxLz)  i
 
 Real L2Norm2_3d(const FlowField& f, bool normalize = true);  // L2Norm2 of all kx!=0 modes
 Real L2Norm3d(const FlowField& f, bool normalize = true);    // L2Norm  of all kx!=0 modes
-Real distFromHeteroclinic(const FlowField& f);
+Real distFromHeteroclinic(const std::vector<FlowField>& v, const FlowField& f);
 
 Real distFromHeteroclinicHeuristic(const FlowField& u, const FlowField& v);
 
@@ -293,6 +293,8 @@ Real getdPdx(const FlowField& u, Real nu);
 Real getdPdz(const FlowField& u, Real nu);
 Real getUbulk(const FlowField& u);
 Real getWbulk(const FlowField& u);
+
+std::vector<FlowField> readHeteroclinicOrbit(std::string, int, int, int);
 
 std::string fieldstats_t(const FlowField& u, Real t);           // return some information about u
 std::string fieldstatsheader_t(const std::string tname = "t");  // header for fieldstats

@@ -118,6 +118,9 @@ int main(int argc, char* argv[]) {
         FlowField u0, du, tmp;
 	FlowField eigenvector("ef1.nc"); // Load the unstable eigenvector of the lower branch state. Already precomputed
 	FlowField initField("ubest.nc");
+    std::vector<FlowField> UB = readHeteroclinicOrbit("../exactHeteroclinic/LBtoUB/u", 0, 3000, 10);
+    std::vector<FlowField> UC = readHeteroclinicOrbit("../exactHeteroclinic/LBtoLam/u", 0, 2600, 10);
+
         int i = 0;
         for (Real t = flags.t0; t <= flags.T; t += dt.dT()) {
             string s;
@@ -133,8 +136,11 @@ int main(int argc, char* argv[]) {
             // fields[0] -= dns.Ubase(); //////////////////// ONLY
             eout << s ;
 	    eout << '\t' << L2IP(fields[0], eigenvector);
-	    if(withDistFromheteroclinic and withDistFromheteroclinicHeuristic == false)
-	    	eout << '\t' << distFromHeteroclinic(fields[0]);
+	    if(withDistFromheteroclinic and withDistFromheteroclinicHeuristic == false) {
+            Real distUB = distFromHeteroclinic(UB, fields[0]);
+            Real distUC = distFromHeteroclinic(UC, fields[0]);
+            eout << '\t' << std::min(distUB, distUC);
+        }
 	    
 	    if(withDistFromheteroclinic and withDistFromheteroclinicHeuristic)
 	    	eout << '\t' << distFromHeteroclinicHeuristic(fields[0], initField);

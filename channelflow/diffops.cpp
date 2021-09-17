@@ -3974,25 +3974,18 @@ string fieldstats_t(const FlowField& u, Real t) {
 
 
 
-Real distFromHeteroclinic(const FlowField& u) {
+Real distFromHeteroclinic(const std::vector<FlowField>& orbit, const FlowField& u) {
 
-    string sourceHeteroclincLBUB = "../exactHeteroclinic/LBtoUB/u";
-    string sourceHeteroclincLBUC = "../exactHeteroclinic/LBtoLam/u";
+    int sizeOfHeteroclinicOrbit = orbit.size();
+    std::vector<Real> distances;
 
-    std::vector<Real> distancesLBUB, distancesLBUC;
-    int sizeOfHeteroclinicOrbit = 3000;
-    distancesLBUB.reserve(sizeOfHeteroclinicOrbit);
-    distancesLBUC.reserve(sizeOfHeteroclinicOrbit);
+    distances.reserve(sizeOfHeteroclinicOrbit);
 
-    for(int i = 1500; i<sizeOfHeteroclinicOrbit; i+=150){
-        FlowField tempLBUB(sourceHeteroclincLBUB + std::to_string(i));
-        FlowField tempLBUC(sourceHeteroclincLBUC + std::to_string(i));
-        distancesLBUB.push_back(L2Dist(u, tempLBUB));
-        distancesLBUC.push_back(L2Dist(u, tempLBUC));
+    for(auto uhet : orbit){
+        distances.push_back(L2Dist(u, uhet));
     }
-    Real minLBUB = *std::min_element( std::begin(distancesLBUB), std::end(distancesLBUB) );
-    Real minLBUC = *std::min_element( std::begin(distancesLBUC), std::end(distancesLBUC) );
-    return std::min(minLBUB, minLBUC);
+    Real mindist = *std::min_element( std::begin(distances), std::end(distances) );
+    return mindist;
 }
 
 
@@ -4006,6 +3999,17 @@ Real distFromHeteroclinicHeuristic(const FlowField& u, const FlowField& v) {
 
 
 
+std::vector<FlowField> readHeteroclinicOrbit(std::string source, int startIndex, int finIndex, int increment) {
+    std::vector<FlowField> U;
+    int sizeOfHeteroclinicOrbit = finIndex - startIndex;
+    U.reserve(sizeOfHeteroclinicOrbit);
+    for(int i = startIndex; i<finIndex; i+=increment){
+        std::cout << i << std::endl;
+        FlowField temp(source + std::to_string(i));
+        U.push_back(temp);
+    }
+    return U;
+}
 
 
 
