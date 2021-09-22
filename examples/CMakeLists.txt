@@ -6,6 +6,7 @@
 #
 set(example_APPS
   couette
+  writeLinearandNLterms
   )
 
 foreach (program ${example_APPS})
