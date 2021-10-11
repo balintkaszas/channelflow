@@ -10,6 +10,7 @@ set(example_APPS
   channel
   checkSolution
   writeLinearandNLterms
+writeSpectralCoeffs
   )
 
 foreach (program ${example_APPS})
