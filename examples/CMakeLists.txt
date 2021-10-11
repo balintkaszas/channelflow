@@ -6,6 +6,9 @@
 #
 set(example_APPS
   couette
+  writestuff
+  channel
+  checkSolution
   )
 
 foreach (program ${example_APPS})
