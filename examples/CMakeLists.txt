@@ -9,6 +9,7 @@ set(example_APPS
   writestuff
   channel
   checkSolution
+  writeLinearandNLterms
   )
 
 foreach (program ${example_APPS})
