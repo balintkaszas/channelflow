@@ -20,6 +20,8 @@ set(tool_APPS
   randomfield
   symmetrize
   symmetryop
+writeSpectralCoeffs
+checkSolution
   )
 
 foreach (program ${tool_APPS})
