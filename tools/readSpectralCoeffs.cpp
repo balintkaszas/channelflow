@@ -11,7 +11,7 @@
 #include <string>
 #include <sstream>
 #include <string>
-
+#include <iomanip>
 using namespace std;
 using namespace chflow;
 
@@ -51,6 +51,8 @@ int main(int argc, char* argv[]) {
    infile.open(input);
    //FlowField u(input);
     FlowField u(Nx, Ny, Nz, 3, Lx, Lz, ymin, ymax); //generate empty flowfield
+    u.setPadded(true);
+
     SymmetryList s;
     if (symmstr.length() > 0) {
         s = SymmetryList(symmstr);
@@ -62,50 +64,53 @@ int main(int argc, char* argv[]) {
     int readLines = 0;
     for(int i=0; i< numberofmodes; ++i){
         readLines++;
-        std::istringstream iss(line);
-        std::getline(infile, line);
         int kx, my, kz;
         Real RealPart, ImagPart;
-        iss >> kx >> my >> kz >> RealPart >> ImagPart;
-        Complex coeff(RealPart, ImagPart);
+        infile >> kx >> my >> kz >> std::setprecision(16) >> RealPart >> ImagPart;
+        if(i == 996){
+            std::cout << i << '\t' <<  line << '\n';
+            std::cout << u.kx(u.mx(kx)) <<  '\t' << my << '\t' << '\t' << u.kz(u.mz(kz))<< ' ' << std::setprecision(16) << RealPart << '\t' << ImagPart << '\n';
+        } 
         if(kz>=0){
-            u.cmplx(u.mx(kx), my, u.mz(kz), 0) = coeff;
+            u.cmplx(u.mx(kx), my, u.mz(kz), 0) = RealPart + ImagPart*I;
         }
     }
     for(int i=0; i< numberofmodes; ++i){
         readLines++;
-
-        std::istringstream iss(line);
-        std::getline(infile, line);
         int kx, my, kz;
         Real RealPart, ImagPart;
-        iss >> kx >> my >> kz >> RealPart >> ImagPart;
-        Complex coeff(RealPart, ImagPart);
+        infile >> kx >> my >>  kz >>std::setprecision(16) >>RealPart >> ImagPart;
         if(kz>=0){
-            u.cmplx(u.mx(kx), my, u.mz(kz), 1) = coeff;
+            u.cmplx(u.mx(kx), my, u.mz(kz), 1) = RealPart + ImagPart*I;
         }
     }
 
     for(int i=0; i< numberofmodes; ++i){
         readLines++;
-
-        std::istringstream iss(line);
-        std::getline(infile, line);
         int kx, my, kz;
         Real RealPart, ImagPart;
-        iss >> kx >> my >> kz >> RealPart >> ImagPart;
-        Complex coeff(RealPart, ImagPart);
+        infile >> kx >> my >> kz >> std::setprecision(16) >> RealPart >> ImagPart;
+        if(readLines == 3018){
+            std::cout << i << '\t' <<  line << '\n';
+            std::cout << u.kx(u.mx(kx)) <<  '\t' << my << '\t' << '\t' << u.kz(u.mz(kz))<< ' ' << std::setprecision(16) << RealPart << '\t' << ImagPart << '\n';
+        } 
+
+
         if(kz>=0){
-            u.cmplx(u.mx(kx), my, u.mz(kz), 2) = coeff;
+            u.cmplx(u.mx(kx), my, u.mz(kz), 2) = RealPart + ImagPart*I;
         }
     }
 	// fill coefficients 
 	// only the chebyshev position counts
 	std::cout << "Read " << readLines << " lines \n";
     std::cout << "Read " << numberofmodes << " lines \n";
+    std::cout << u.cmplx(u.mx(-1), 2, u.mz(0), 2) << '\n';
+    //u.setPadded(true);
 
+    u.makePhysical();
+    u.makeSpectral();
+    std::cout << u.cmplx(u.mx(-1), 2, u.mz(0), 2) << '\n';
     infile.close();
-    u.setPadded(true);
     u.save(output);
  }
     cfMPI_Finalize();
