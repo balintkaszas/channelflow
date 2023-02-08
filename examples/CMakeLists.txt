@@ -8,9 +8,8 @@ set(example_APPS
   couette
   writestuff
   channel
-  checkSolution
-  writeLinearandNLterms
-writeSpectralCoeffs
+   evaluateSecondDeriv
+  evaluateVectorfield
   )
 
 foreach (program ${example_APPS})
