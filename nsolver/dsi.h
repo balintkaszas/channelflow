@@ -23,6 +23,7 @@ class DSI {
    public:
     DSI();
     DSI(std::ostream* os);
+    //DSI(std::function<Eigen::VectorXd(const Eigen::VectorXd&)> func);
 
     /** \brief The infamous virtual destructor */
     virtual ~DSI() = default;
@@ -40,6 +41,8 @@ class DSI {
     virtual Eigen::VectorXd eval(const Eigen::VectorXd& x) = 0;
 
     virtual Eigen::VectorXd eval(const Eigen::VectorXd& x0, const Eigen::VectorXd& x1, bool symopt = false);
+    //virtual Eigen::VectorXd eval(const Eigen::VectorXd& x0, std::function<Eigen::VectorXd(Eigen::VectorXd& )> func);
+
 
     /** Save vector x in "outdir/filebase" */
     virtual void save(const Eigen::VectorXd& x, const std::string filebase, const std::string outdir = "./",
@@ -147,6 +150,7 @@ class DSI {
     Real mu_;
 
     std::ostream* os_;
+    //std::function<Eigen::VectorXd(const Eigen::VectorXd&)> func_;
 };
 
 }  // namespace chflow

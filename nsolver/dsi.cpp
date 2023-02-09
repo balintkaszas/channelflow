@@ -21,10 +21,17 @@ DSI::DSI(DSI& D) {}
 
 DSI::DSI(ostream* os) : os_(os) {}
 
+//DSI::DSI(std::function<Eigen::VectorXd(const Eigen::VectorXd&)> func) :  func_(func) {}
+
 VectorXd DSI::eval(const VectorXd& x0, const VectorXd& x1, bool symopt) {
     throw runtime_error(
         "You are trying to call DSI::eval(x0,x1), which is not present for the DSI implementation you are "
         "using. DSI::eval(x0,x1) is required for multiShooting.");
+}
+
+
+VectorXd DSI::eval(const VectorXd& x0) {
+    return x0;
 }
 
 void DSI::save(const VectorXd& x, const string filebase, const string outdir, const bool fieldsonly) {

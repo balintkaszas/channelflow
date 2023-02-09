@@ -394,13 +394,14 @@ VectorXd NewtonAlgorithm::solve(DSI& dsiG, const VectorXd& y0, Real& gx) {
 
     // ==============================================================
     // Initialize Newton iteration
+    *os << Nunk << endl;
     *os << "Computing G(x)" << endl;
     VectorXd x(Nunk);
     for (int i = 0; i < x0.rows(); ++i)
         x(i) = x0(i);
-
+    *os << x << endl;
     VectorXd Gx = evalWithAC(x, fcount_newton_);  // 0 ==> current best guess
-
+    *os << "dd " << endl;
     string filebase = "best";
 
     // From here on, scale/unscale x when interfacing with the external world
@@ -788,6 +789,16 @@ VectorXd NewtonAlgorithm::solve(DSI& dsiG, const VectorXd& y0, Real& gx) {
     }
     return x;
 }
+
+
+
+
+
+
+
+
+
+
 
 MatrixXd NewtonAlgorithm::jacobi(const VectorXd& x, const Real epsilon, const bool centerdiff, int& fcount) {
     // Sajjad: I think this function works only in serial; FIXME

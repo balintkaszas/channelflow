@@ -10,6 +10,7 @@ set(example_APPS
   channel
    evaluateSecondDeriv
   evaluateVectorfield
+SolveEq
   )
 
 foreach (program ${example_APPS})
