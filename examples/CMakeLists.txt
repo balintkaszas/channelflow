@@ -10,6 +10,8 @@ set(example_APPS
   channel
    evaluateSecondDeriv
   evaluateVectorfield
+evaluate_second_order_term	
+test_linear_operator
 SolveEq
   )
 
